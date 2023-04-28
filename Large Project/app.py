@@ -13,7 +13,8 @@ client = MongoClient("mongodb+srv://manjarirudra:BgxHnvE5REtpYngG@cluster0.4awsn
 db = client['UMS']
 Courses = db['Courses']
 Students = db['Students']
-Workers = db['Workers']
+Instructors = db['Instructors']
+Admins = db['Admins']
 
 # blueprint for auth routes in our app
 from .auth import auth as auth_blueprint
