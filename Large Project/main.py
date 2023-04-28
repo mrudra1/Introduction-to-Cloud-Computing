@@ -2,6 +2,8 @@ from app import app, db
 from flask import render_template, url_for, flash, get_flashed_messages, redirect, request
 from datetime import datetime
 from flask import Blueprint
+from forms import AddCourseForm, DropCourseForm
+import forms,utils
 
 main = Blueprint('main', __name__)
 
@@ -16,6 +18,18 @@ def home():
 @main.route('/courses')
 def courses():
     return render_template('courses.html')
+
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    form = forms.AddTaskForm()
+    print('\n\n\n',form.title.__call__(),'Hello')
+    if form.validate_on_submit():
+        task = models.Task(title=form.title.data, date=datetime.utcnow())
+        db.session.add(task)
+        db.session.commit()
+        flash('Task added')
+        return redirect(url_for('index'))
+    return render_template('add.html', form=form)
 
 @main.route('/payments')
 def payments():

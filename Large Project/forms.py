@@ -1,9 +1,24 @@
 from datetime import datetime
 from markupsafe import Markup
 from flask_wtf import FlaskForm
-from wtforms import RadioField, SubmitField, HiddenField, StringField, widgets
+from wtforms import RadioField, SubmitField, HiddenField, StringField, widgets, SelectField, PasswordField
 from wtforms.validators import DataRequired
 import uuid
+
+class AddCourseForm(FlaskForm):
+    subject = SelectField('Subject',choices=[('CS','Computer Science')])
+    courseNumber = SelectField('CourseNumber', choices=[('520','520'),('526','526'),('532','532'),('535','535'),('536','536'),('550','550'),('565','565'),('571','571'),('572','572'),('575','575')])
+    submit = SubmitField('Submit', id = 'Submit')
+
+class DropCourseForm(FlaskForm):
+    subject = SelectField('Subject',choices=[('CS','Computer Science')])
+    courseNumber = SelectField('CourseNumber', choices=[('520','520'),('526','526'),('532','532'),('535','535'),('536','536'),('550','550'),('565','565'),('571','571'),('572','572'),('575','575')])
+    submit = SubmitField('Submit', id = 'Submit')
+
+class LogInForm(FlaskForm):
+    user = StringField('username',validators=[DataRequired])
+    password = PasswordField('password', validators=[DataRequired])
+    submitField = SubmitField('Submit')
 
 # class SurveyForm(FlaskForm):
 
