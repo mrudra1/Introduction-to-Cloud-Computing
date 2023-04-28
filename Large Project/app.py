@@ -15,14 +15,7 @@ Courses = db['Courses']
 Students = db['Students']
 Instructors = db['Instructors']
 Admins = db['Admins']
-
-# blueprint for auth routes in our app
-from .auth import auth as auth_blueprint
-app.register_blueprint(auth_blueprint)
-
-# blueprint for non-auth parts of app
-from .main import main as main_blueprint
-app.register_blueprint(main_blueprint)
+Users = db['Users']
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)

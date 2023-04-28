@@ -5,15 +5,11 @@ from wtforms import RadioField, SubmitField, HiddenField, StringField, widgets, 
 from wtforms.validators import DataRequired
 import uuid
 
-class AddCourseForm(FlaskForm):
+class ManagegeCourseForm(FlaskForm):
     subject = SelectField('Subject',choices=[('CS','Computer Science')])
-    courseNumber = SelectField('CourseNumber', choices=[('520','520'),('526','526'),('532','532'),('535','535'),('536','536'),('550','550'),('565','565'),('571','571'),('572','572'),('575','575')])
-    submit = SubmitField('Submit', id = 'Submit')
-
-class DropCourseForm(FlaskForm):
-    subject = SelectField('Subject',choices=[('CS','Computer Science')])
-    courseNumber = SelectField('CourseNumber', choices=[('520','520'),('526','526'),('532','532'),('535','535'),('536','536'),('550','550'),('565','565'),('571','571'),('572','572'),('575','575')])
-    submit = SubmitField('Submit', id = 'Submit')
+    courseNumber = SelectField('CourseNumber', choices=[('520','520'),('526','526'),('532','532'),('535','535'),('536','536'),('550','550'),('565','565'),('571','571'),('572','572'),('575','575')],validators=[DataRequired])
+    add = SubmitField('Add')
+    drop = SubmitField('Drop')
 
 class LogInForm(FlaskForm):
     user = StringField('username',validators=[DataRequired])
