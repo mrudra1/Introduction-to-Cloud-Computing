@@ -79,29 +79,33 @@ def addCourse(id, CourseNumber):
     })
     Students.update_one({'StudentID':id},{'$set':{'CourseList':student['CourseList']}})
 
-    course = Courses.find_one({'Course Number':CourseNumber})
+    course = Courses.find_one({'Course Number':int(CourseNumber)})
     course['Status']['Enrolled'] += 1
-    Courses.update_one({'Course Number':CourseNumber},{'$set':{'Status':course['Status']}})
+    result = Courses.update_one({'Course Number':int(CourseNumber)},{'$set':{'Status':course['Status']}})
 
 def dropCourse(id, CourseNumber):
     student = Students.find_one({'StudentID':id})
-    student['CourseList'].remove({
-        'CourseNumber' : CourseNumber,
-        'Subject' : 'CS',
-        'Status' : 'Ongoing'
-    })
-    Students.update_one({'StudentID':id},{'$set':{'CourseList':student['CourseList']}})
+    courses = []
+    for item in student['CourseList']:
+        if int(item['CourseNumber']) == int(CourseNumber):
+            removal = item
+            continue
 
-    course = Courses.find_one({'Course Number':CourseNumber})
+        courses.append(item)
+
+    #student['CourseList'].remove(removal)
+    Students.update_one({'StudentID':id},{'$set':{'CourseList':courses}})
+
+    course = Courses.find_one({'Course Number':int(CourseNumber)})
     if course['Status']['Enrolled'] >0:
         course['Status']['Enrolled'] -= 1
-        Courses.update_one({'Course Number':CourseNumber},{'$set':{'Status':course['Status']}})
+        Courses.update_one({'Course Number':int(CourseNumber)},{'$set':{'Status':course['Status']}})
 
 def checkDropCourse(id,CourseNumber):
     student = Students.find_one({'StudentID':id})
     for item in student['CourseList']:
         if int(item['CourseNumber']) == int(CourseNumber):
-            return False
+            return True
     
     return False
 
@@ -110,11 +114,10 @@ def checkAddCourses(id,CourseNumber):
     course = Courses.find_one({'Course Number':int(CourseNumber)})
 
     for item in student['CourseList']:
-        if item['CourseNumber'] == CourseNumber:
+        if int(item['CourseNumber']) == int(CourseNumber):
             return False
         
         doc = Courses.find_one({'Course Number':int(CourseNumber)})
-        #print(doc)
 
         for day in course['Meeting']['Days']:
             if day in doc['Meeting']['Days']:
@@ -137,5 +140,17 @@ def checkClass(st1,et1,st2,et2):
         'et2': et2
     }
     response = requests.post("https://us-central1-unimanagementsystem-385301.cloudfunctions.net/check_class", json=params)
-    print(response.text)
+    if 'true' in response.text:
+        return True
+    else:
+        return False
 
+def getCredits(id):
+    student = Students.find_one({'StudentID':id})
+    return len(student['CourseList'])*3
+
+def computeTuition(credits):
+    return round(float(1000*credits),3)
+
+def computeTotalFees(credits):
+    return round(float(1260 + computeTuition(credits)),3)

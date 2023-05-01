@@ -53,7 +53,7 @@ def courses(id):
                 utils.addCourse(id,course)
                 redirect(url_for('home',id = id))
             else:
-                message = 'Cannot add course. Clashing times'
+                message = 'Cannot add course. Clashing times or course already added'
                 return render_template('manageCourse.html', form=form, courses = courses, message= message, id = id)
             
         if form.drop.data:
@@ -66,6 +66,9 @@ def courses(id):
 
     return render_template('manageCourse.html', form=form, courses = courses, message = message, id = id)
 
-@main.route('/payments/<id>')
+@app.route('/payments/<id>')
 def payments(id):
-    return render_template('payments.html')
+    credits = utils.getCredits(id)
+    tuition = utils.computeTuition(credits)
+    total = utils.computeTotalFees(credits)
+    return render_template('payments.html', id = id, credits = credits, tuition = tuition, total = total)
