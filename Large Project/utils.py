@@ -11,6 +11,7 @@ def checkLogIn(user,password):
 
 def getStudentDetails(id):
     document = Students.find_one({'StudentID':id})
+    print('\n\n', id, '\n', document, '\n\n\n')
     name = document['Name']
     dob = document['DOB']
     address = document['Contact']['Address']
@@ -101,7 +102,7 @@ def checkDropCourse(id,CourseNumber):
 
 def checkAddCourses(id,CourseNumber):
     student = Students.find_one({'StudentID':id})
-    course = Courses.find_one({'Course Number':CourseNumber})
+    course = Courses.find_one({'Course Number':int(CourseNumber)})
 
     for item in student['CourseList']:
         if item['CourseNumber'] == CourseNumber:

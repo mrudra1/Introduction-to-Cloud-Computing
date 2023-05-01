@@ -62,7 +62,7 @@ def courses(id):
                 redirect(url_for('home', id = id))
             else:
                 message = 'Cannot drop a course that has not been taken'
-                return render_template('add.html', form=form, courses = courses, message = message, id = id)
+                return render_template('manageCourse.html', form=form, courses = courses, message = message, id = id)
 
     return render_template('manageCourse.html', form=form, courses = courses, message = message, id = id)
 
