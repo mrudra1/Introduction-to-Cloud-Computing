@@ -54,7 +54,7 @@ def courses(id):
                 redirect(url_for('home',id = id))
             else:
                 message = 'Cannot add course. Clashing times'
-                return render_template('add.html', form=form, courses = courses, message= message, id = id)
+                return render_template('manageCourse.html', form=form, courses = courses, message= message, id = id)
             
         if form.drop.data:
             if utils.checkDropCourse(id,course):
@@ -67,5 +67,5 @@ def courses(id):
     return render_template('manageCourse.html', form=form, courses = courses, message = message, id = id)
 
 @main.route('/payments/<id>')
-def payments():
+def payments(id):
     return render_template('payments.html')

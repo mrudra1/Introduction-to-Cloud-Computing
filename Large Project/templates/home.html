@@ -80,7 +80,7 @@
 <div class="topnav">
     <a class="active" href="#home">Home</a>
     <a href="/courses/{{ id }}">Courses</a>
-    <a href="#payments">Payments</a>
+    <a href="/payments/{{ id }}">Payments</a>
 </div>
 
 <div>
@@ -92,22 +92,37 @@
     Phone: {{ phone }}
     <br><br><br>
 
-    {% for course in courses %}
-    <div class="flip-card">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          <img src="{{ course.CourseNumber}}.png" alt="Avatar" style="width:300px;height:300px;">
-        </div>
-        <div class="flip-card-back">
-          <p>Course Name : {{ course.Name }}<p>
-          <p>Course Description: {{course.Description}}</p>
-          <p>Held On:<br>
-            Days: {{course.Days}}<br>
-            Time: {{course.StartTime}}-{{course.EndTime}}
-          </p>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
+    <table>
+      <tr>
+        <th>
+          Course Name
+        </th>
+        <th>
+          Course Description
+        </th>
+        <th>
+          Days
+        </th>
+        <th>
+          Times
+        </th>
+      </tr>
+      {% for course in courses %}
+      <tr>
+        <td>
+          {{ course.Name }}
+        </td>
+        <td>
+          {{ course.Description }}
+        </td>
+        <td>
+          {{ course.Days }}
+        </td>
+        <td>
+          {{course.StartTime}}-{{course.EndTime}}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
 </div>
 {% endblock %}

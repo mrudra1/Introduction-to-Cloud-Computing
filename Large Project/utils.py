@@ -1,5 +1,5 @@
 from app import Courses, Students, Users, Admins, Instructors
-import json
+import requests
 
 def checkLogIn(user,password):
     print(user,password)
@@ -10,7 +10,6 @@ def checkLogIn(user,password):
     return False
 
 def getCourseDetails(CourseNumber):
-    
     details = Courses.find_one({'Course Number': int(CourseNumber)})
     if not details:
         print(CourseNumber, type(CourseNumber))
@@ -28,9 +27,11 @@ def getCourseDetails(CourseNumber):
     course['EndTime'] = details['Meeting']['EndTime']
     course['icon'] = details['Icon']
 
+    return course
+
 def getStudentDetails(id):
     document = Students.find_one({'StudentID':id})
-    print('\n\n', id, '\n', document, '\n\n\n')
+    #print('\n\n', id, '\n', document, '\n\n\n')
     name = document['Name']
     dob = document['DOB']
     address = document['Contact']['Address']
@@ -38,8 +39,8 @@ def getStudentDetails(id):
     email = document['Contact']['email']
     courseList = document['CourseList']
     courses = []
-    
     for item in courseList:
+        #print(item['CourseNumber'])
         courses.append(getCourseDetails(item['CourseNumber'])) 
         
     
@@ -99,7 +100,7 @@ def dropCourse(id, CourseNumber):
 def checkDropCourse(id,CourseNumber):
     student = Students.find_one({'StudentID':id})
     for item in student['CourseList']:
-        if item['CourseNumber'] == CourseNumber:
+        if int(item['CourseNumber']) == int(CourseNumber):
             return False
     
     return False
@@ -112,7 +113,8 @@ def checkAddCourses(id,CourseNumber):
         if item['CourseNumber'] == CourseNumber:
             return False
         
-        doc = Courses.find_one({'Course Number':CourseNumber})
+        doc = Courses.find_one({'Course Number':int(CourseNumber)})
+        #print(doc)
 
         for day in course['Meeting']['Days']:
             if day in doc['Meeting']['Days']:
@@ -121,9 +123,19 @@ def checkAddCourses(id,CourseNumber):
                 
     return True
 
+# def checkClass(st1,et1,st2,et2):
+#     if (st2 > st1 and st2 < et1) or (st1 > st2 and st1 < et2) :
+#         return True
+#     else:
+#         return False
+    
 def checkClass(st1,et1,st2,et2):
-    if (st2 > st1 and st2 < et1) or (st1 > st2 and st1 < et2) :
-        return True
-    else:
-        return False
+    params = {
+        'st1': st1,
+        'et1': et1,
+        'st2': st2,
+        'et2': et2
+    }
+    response = requests.post("https://us-central1-unimanagementsystem-385301.cloudfunctions.net/check_class", json=params)
+    print(response.text)
 
