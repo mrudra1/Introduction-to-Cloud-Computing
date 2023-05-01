@@ -51,7 +51,7 @@ def courses(id):
         if form.add.data:
             if utils.checkAddCourses(id,course):
                 utils.addCourse(id,course)
-                redirect(url_for('home',id = id))
+                return redirect('/home/'+id)
             else:
                 message = 'Cannot add course. Clashing times or course already added'
                 return render_template('manageCourse.html', form=form, courses = courses, message= message, id = id)
@@ -59,7 +59,8 @@ def courses(id):
         if form.drop.data:
             if utils.checkDropCourse(id,course):
                 utils.dropCourse(id, course)
-                redirect(url_for('home', id = id))
+                #redirect(url_for('home', id = id))
+                return redirect('/home/'+id)
             else:
                 message = 'Cannot drop a course that has not been taken'
                 return render_template('manageCourse.html', form=form, courses = courses, message = message, id = id)
