@@ -1,6 +1,8 @@
 from app import Courses, Students, Users, Admins, Instructors
+import json
 
 def checkLogIn(user,password):
+    print(user,password)
     document = Users.find_one({'user':user})
     if document:
         if document['password'] == password:
@@ -8,7 +10,7 @@ def checkLogIn(user,password):
     return False
 
 def getStudentDetails(id):
-    document = Students.find_one({'studentID':id})
+    document = Students.find_one({'StudentID':id})
     name = document['Name']
     dob = document['DOB']
     address = document['Contact']['Address']
@@ -18,12 +20,18 @@ def getStudentDetails(id):
     courses = []
     course = {}
     for item in courseList:
-        course = {}
-        details = Courses.find_one({'Course Number': item['CourseNumber']})
+        course = {
+            'Name' : '',
+            'Description' : ''
+        }
+        details = Courses.find_one({'Course Number': int(item['CourseNumber'])})
+        if not details:
+            print(item['CourseNumber'], type(item['CourseNumber']))
         course['Name'] = details['Title']
         course['Description'] = details['Description']
+        course['Days'] = ''
         for day in details['Meeting']['Days']:
-            courses['Days'] += day + ', '
+            course['Days'] += day + ', '
 
         course['StartTime'] = details['Meeting']['StartTime']
         course['EndTime'] = details['Meeting']['EndTime']
@@ -44,6 +52,7 @@ def getAllCourses():
         course['capacity'] = item['Status']['Capacity']
         course['enrolled'] = item['Status']['Enrolled']
         course['instructor'] = 'TBD'
+        course['meeting'] = ''
         for day in item['Meeting']['Days']:
             course['meeting'] += day + ', '
 

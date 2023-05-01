@@ -31,9 +31,9 @@ color: white;
 </style>
 
 <div class="topnav">
-  <a href="{{ url_for('home', id = id) }}">Home</a>
+  <a href="/home/{{ id }}">Home</a>
   <a class="active" href="#courses">Courses</a>
-  <a href="{{ url_for('payments', id = id ) }}">Payment</a>
+  <a href="/payments/{{ id }}">Payment</a>
 </div>
 
 <h3>List of Courses</h3>
@@ -65,25 +65,25 @@ color: white;
   {% for course in courses %}
   <tr>
     <td>
-      {{ courses[course].subject }}
+      {{ course.subject }}
     </td>
     <td>
-      {{ courses[course].courseNumber }}
+      {{ course.courseNumber }}
     </td>
     <td>
-      {{ courses[course].name }}
+      {{ course.name }}
     </td>
     <td>
-      {{ courses[course].capacity }}/{{ courses[course].enrolled }}
+      {{ course.capacity }}/{{ course.enrolled }}
     </td>
     <td>
-      {{ courses[course].instructor }}
+      {{ course.instructor }}
     </td>
     <td>
-      {{ courses[course].meeting }}
+      {{ course.meeting }}
     </td>
     <td>
-      {{ courses[course].credits }}
+      {{ course.credits }}
     </td>
   </tr>
   {% endfor %}
@@ -94,7 +94,7 @@ color: white;
 </h3>
 
 <table>
-  <form action="{{ url_for('add') }}" method="post"></form>
+  <form method="post">
   {{ form.csrf_token }}
   <tr>
     <td colspan="2">
@@ -111,6 +111,7 @@ color: white;
     <td>{{ form.add }}</td>
     <td>{{ form.drop }}</td>
   </tr>
+  </form>
 </table>
 
 {% endblock %}

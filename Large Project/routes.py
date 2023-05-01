@@ -10,12 +10,14 @@ main = Blueprint('main', __name__)
 #import models
 #import forms
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print('In Login')
     form = LogInForm()
     message = ''
-    if form.validate_on_submit():
+    if form.is_submitted():
+        print('validated')
         user = form.user.data
         password = form.password.data
         id = utils.checkLogIn(user,password)
@@ -25,16 +27,19 @@ def login():
         else:
             message = 'Incorrect Username or Password'
             return render_template('login.html',form=form, message=message)
+    
+    print('Not validated')
         
     return render_template('login.html', form=form, message=message)
 
 @app.route('/home/<id>')
 def home(id):
     name, dob, address, phone, email, courses = utils.getStudentDetails(id)
-    return render_template('home.html', name, dob, address, phone, email, courses)
+    print(courses)
+    return render_template('home.html', id = id, name=name, dob=dob, address=address, phone=phone, email=email, courses=courses)
 
 @app.route('/courses/<id>', methods=['GET', 'POST'])
-def add(id):
+def courses(id):
     form = ManagegeCourseForm()
     courses = utils.getAllCourses()
     message = ''
@@ -49,7 +54,7 @@ def add(id):
                 redirect(url_for('home',id = id))
             else:
                 message = 'Cannot add course. Clashing times'
-                return render_template('add.html', form=form, courses = courses, message= message)
+                return render_template('add.html', form=form, courses = courses, message= message, id = id)
             
         if form.drop.data:
             if utils.checkDropCourse(id,course):
@@ -57,10 +62,10 @@ def add(id):
                 redirect(url_for('home', id = id))
             else:
                 message = 'Cannot drop a course that has not been taken'
-                return render_template('add.html', form=form, courses = courses, message = message)
+                return render_template('add.html', form=form, courses = courses, message = message, id = id)
 
-    return render_template('manageCourse.html', form=form, courses = courses, message = message)
+    return render_template('manageCourse.html', form=form, courses = courses, message = message, id = id)
 
-@main.route('/payments')
+@main.route('/payments/<id>')
 def payments():
     return render_template('payments.html')

@@ -2,7 +2,7 @@
 
 {% extends "base.html" %}
 
-{% block content %}
+{% block main %}
 
 <style>
     .alert{
@@ -13,7 +13,7 @@
 </style>
 
 <table>
-    <form action="{{ url_for('add') }}" method="post"></form>
+    <form method="post">
     {{ form.csrf_token }}
     <tr>
         <td>User Name: {{ form.user }}</td>
@@ -25,7 +25,8 @@
         <td>{% if message %}<p class="alert">{{ message }}</p>{% endif %}</td>
     </tr>
     <tr>
-        <td>{{ form.submit }}</td>
+        <td>{{ form.submit(class_="button") }}</td>
     </tr>
+</form>
 </table>
 {% endblock %}

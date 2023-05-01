@@ -17,5 +17,7 @@ Instructors = db['Instructors']
 Admins = db['Admins']
 Users = db['Users']
 
+from routes import *
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)
