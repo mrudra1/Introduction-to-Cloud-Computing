@@ -9,6 +9,25 @@ def checkLogIn(user,password):
             return document['userID']
     return False
 
+def getCourseDetails(CourseNumber):
+    
+    details = Courses.find_one({'Course Number': int(CourseNumber)})
+    if not details:
+        print(CourseNumber, type(CourseNumber))
+
+    course = {
+        'Name' : ''
+    }
+    course['Name'] = details['Title']
+    course['Description'] = details['Description']
+    course['Days'] = ''
+    for day in details['Meeting']['Days']:
+        course['Days'] += day + ', '
+
+    course['StartTime'] = details['Meeting']['StartTime']
+    course['EndTime'] = details['Meeting']['EndTime']
+    course['icon'] = details['Icon']
+
 def getStudentDetails(id):
     document = Students.find_one({'StudentID':id})
     print('\n\n', id, '\n', document, '\n\n\n')
@@ -19,25 +38,10 @@ def getStudentDetails(id):
     email = document['Contact']['email']
     courseList = document['CourseList']
     courses = []
-    course = {}
+    
     for item in courseList:
-        course = {
-            'Name' : '',
-            'Description' : ''
-        }
-        details = Courses.find_one({'Course Number': int(item['CourseNumber'])})
-        if not details:
-            print(item['CourseNumber'], type(item['CourseNumber']))
-        course['Name'] = details['Title']
-        course['Description'] = details['Description']
-        course['Days'] = ''
-        for day in details['Meeting']['Days']:
-            course['Days'] += day + ', '
-
-        course['StartTime'] = details['Meeting']['StartTime']
-        course['EndTime'] = details['Meeting']['EndTime']
-
-        courses.append(course.copy())
+        courses.append(getCourseDetails(item['CourseNumber'])) 
+        
     
     return name, dob, address, phone, email, courses
 
